@@ -3,40 +3,29 @@ package main
 import (
 	"fmt"
 	"strconv"
+	"task1/library"
 )
 
-type Id func(Book) string
-
-type Book struct {
-	name string
-}
-
-type Storage interface {
-	Search(id string) (Book, bool)
-	Add(id string, book Book)
-	ChangeId(id Id)
-}
-
 type SliceStorage struct {
-	books   []Book
+	books   []library.Book
 	booksId []string
 }
 
-func (sliceStorage SliceStorage) Search(id string) (Book, bool) {
+func (sliceStorage SliceStorage) Search(id string) (library.Book, bool) {
 	for ind, currId := range sliceStorage.booksId {
 		if currId == id {
 			return sliceStorage.books[ind], true
 		}
 	}
-	return Book{}, false
+	return library.Book{}, false
 }
 
-func (sliceStorage *SliceStorage) Add(id string, book Book) {
+func (sliceStorage *SliceStorage) Add(id string, book library.Book) {
 	sliceStorage.books = append(sliceStorage.books, book)
 	sliceStorage.booksId = append(sliceStorage.booksId, id)
 }
 
-func (sliceStorage *SliceStorage) ChangeId(id Id) {
+func (sliceStorage *SliceStorage) ChangeId(id library.Id) {
 	newBooksId := []string{}
 	for _, book := range sliceStorage.books {
 		newBooksId = append(newBooksId, id(book))
@@ -45,82 +34,64 @@ func (sliceStorage *SliceStorage) ChangeId(id Id) {
 }
 
 type MapStorage struct {
-	data map[string]Book
+	data map[string]library.Book
 }
 
-func (mapStorage MapStorage) Search(id string) (Book, bool) {
+func (mapStorage MapStorage) Search(id string) (library.Book, bool) {
 	book, result := mapStorage.data[id]
 	return book, result
 }
 
-func (mapStorage *MapStorage) Add(id string, book Book) {
+func (mapStorage *MapStorage) Add(id string, book library.Book) {
 	if mapStorage.data == nil {
-		mapStorage.data = make(map[string]Book)
+		mapStorage.data = make(map[string]library.Book)
 	}
 	mapStorage.data[id] = book
 }
 
-func (mapStorage *MapStorage) ChangeId(id Id) {
-	newData := make(map[string]Book)
+func (mapStorage *MapStorage) ChangeId(id library.Id) {
+	newData := make(map[string]library.Book)
 	for _, book := range mapStorage.data {
 		newData[id(book)] = book
 	}
 	mapStorage.data = newData
 }
 
-type Library struct {
-	Storage
-	id Id
+func Id1(book library.Book) string {
+	return book.Name
 }
 
-func (lib Library) Search(name string) (Book, bool) {
-	return lib.Storage.Search(lib.id(Book{name: name}))
-}
-
-func (lib *Library) Add(book Book) {
-	lib.Storage.Add(lib.id(book), book)
-}
-
-func (lib *Library) SetId(id Id) {
-	lib.Storage.ChangeId(id)
-	lib.id = id
-}
-
-func Id1(book Book) string {
-	return book.name
-}
-
-func Id2(book Book) string {
-	return book.name + "_" + strconv.Itoa(len(book.name))
+func Id2(book library.Book) string {
+	return book.Name + "_" + strconv.Itoa(len(book.Name))
 }
 
 func main() {
-	books := []Book{Book{name: "Book1"}, Book{name: "Book2"}, Book{name: "Book3"},
-		Book{name: "Book4"}, Book{name: "Book5"}}
+	books := []library.Book{library.Book{Name: "Book1"}, library.Book{Name: "Book2"}, library.Book{Name: "Book3"},
+		library.Book{Name: "Book4"}, library.Book{Name: "Book5"}}
 
-	library := Library{Storage: new(SliceStorage), id: Id1}
+	libraryExample := library.Library{Storage: new(SliceStorage), Id: Id1}
 	for _, book := range books {
-		library.Add(book)
+		libraryExample.Add(book)
 	}
-	fmt.Println(library.Search("Book1"))
-	fmt.Println(library.Search("Book3"))
-	library.SetId(Id2)
-	fmt.Println(library.Search("Book1"))
-	fmt.Println(library.Search("Book3"))
-	library.SetId(Id1)
-	fmt.Println(library.Search("Book1"))
-	fmt.Println(library.Search("Book3"))
+	fmt.Println(libraryExample.Search("Book1"))
+	fmt.Println(libraryExample.Search("Book3"))
+	libraryExample.SetId(Id2)
+	fmt.Println(libraryExample.Search("Book1"))
+	fmt.Println(libraryExample.Search("Book3"))
+	libraryExample.SetId(Id1)
+	fmt.Println(libraryExample.Search("Book1"))
+	fmt.Println(libraryExample.Search("Book3"))
 
-	library.Storage = new(MapStorage)
+	libraryExample.Storage = new(MapStorage)
 	for _, book := range books {
-		library.Add(book)
+		libraryExample.Add(book)
 	}
-	fmt.Println(library.Search("Book1"))
-	fmt.Println(library.Search("Book3"))
-	library.SetId(Id2)
-	fmt.Println(library.Search("Book1"))
-	fmt.Println(library.Search("Book3"))
-	library.SetId(Id1)
-	fmt.Println(library.Search("Book1"))
-	fmt.Println(library.Search("Book3"))
+	fmt.Println(libraryExample.Search("Book1"))
+	fmt.Println(libraryExample.Search("Book3"))
+	libraryExample.SetId(Id2)
+	fmt.Println(libraryExample.Search("Book1"))
+	fmt.Println(libraryExample.Search("Book3"))
+	libraryExample.SetId(Id1)
+	fmt.Println(libraryExample.Search("Book1"))
+	fmt.Println(libraryExample.Search("Book3"))
 }
