@@ -1,0 +1,147 @@
+openapi: 3.0.3
+info:
+  title: Домашнее задание по языку Go номер 2
+  description: ...
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 0.0.0
+  contact:
+    name: Денис Колесников
+
+servers:
+  - url: 0.0.0.0:8080
+    description: Локальный сервер
+
+components:
+  schemas:
+    Version:
+      type: object
+      description: Объект, хранящий версию
+      properties:
+        Version:
+          type: string
+          description: версия api
+
+          default: '#/info/version'
+
+    Output:
+      type: object
+      description: Объект, хранящий декодированную строку
+      properties:
+        Output:
+          type: string
+          description: Значение строки
+
+    Input:
+      type: object
+      description: Объект, хранящий строку для декодирования
+      properties:
+        Input:
+          type: string
+          description: Значение строки
+
+    Error:
+      type: object
+      description: Cодержит сообщение об ошибке
+      properties:
+        Message:
+          type: string
+          description: Cообщение об ошибке
+
+    Success:
+      type: object
+      description: Cодержит сообщение об успешном запросе
+      properties:
+        Message:
+          type: string
+          description: Сообщение об успешном запросе
+
+paths:
+  /version:
+    get:
+      summary: Получить semantic version
+      operationId: GetVersion
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Version'
+
+        "405":
+          description: Method Not Allowed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /decode:
+    post:
+      summary: Декодировать строку из формата base64
+      operationId: Decode
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Output'
+
+        "405":
+          description: Method Not Allowed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /hard-op:
+    get:
+      summary: Метод, который спит от 10 до 20 секунд, после чего возвращает случайным образом 500 или 200 статус ответа
+      operationId: RandomShit
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+
+        "405":
+          description: Method Not Allowed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+
+
