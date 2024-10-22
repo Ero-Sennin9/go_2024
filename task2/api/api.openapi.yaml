@@ -22,8 +22,9 @@ components:
         Version:
           type: string
           description: версия api
-
           default: '#/info/version'
+      required:
+        - Version
 
     Output:
       type: object
@@ -32,6 +33,8 @@ components:
         Output:
           type: string
           description: Значение строки
+      required:
+        - Output
 
     Input:
       type: object
@@ -40,6 +43,8 @@ components:
         Input:
           type: string
           description: Значение строки
+      required:
+        - Input
 
     Error:
       type: object
@@ -48,6 +53,8 @@ components:
         Message:
           type: string
           description: Cообщение об ошибке
+      required:
+        - Message
 
     Success:
       type: object
@@ -56,6 +63,8 @@ components:
         Message:
           type: string
           description: Сообщение об успешном запросе
+      required:
+        - Success
 
 paths:
   /version:
@@ -142,6 +151,4 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-
-
 

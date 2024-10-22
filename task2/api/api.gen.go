@@ -18,19 +18,19 @@ import (
 // Error Cодержит сообщение об ошибке
 type Error struct {
 	// Message Cообщение об ошибке
-	Message *string `json:"Message,omitempty"`
+	Message string `json:"Message"`
 }
 
 // Input Объект, хранящий строку для декодирования
 type Input struct {
 	// Input Значение строки
-	Input *string `json:"Input,omitempty"`
+	Input string `json:"Input"`
 }
 
 // Output Объект, хранящий декодированную строку
 type Output struct {
 	// Output Значение строки
-	Output *string `json:"Output,omitempty"`
+	Output string `json:"Output"`
 }
 
 // Success Cодержит сообщение об успешном запросе
@@ -42,7 +42,7 @@ type Success struct {
 // Version Объект, хранящий версию
 type Version struct {
 	// Version версия api
-	Version *string `json:"Version,omitempty"`
+	Version string `json:"Version"`
 }
 
 // RequestEditorFn  is the function signature for the RequestEditor callback function
@@ -52,7 +52,7 @@ type RequestEditorFn func(ctx context.Context, req *http.Request) error
 //
 // The standard http.Client implements this interface.
 type HttpRequestDoer interface {
-	 Do(req *http.Request) (*http.Response, error)
+	Do(req *http.Request) (*http.Response, error)
 }
 
 // Client which conforms to the OpenAPI3 specification for this service.
@@ -715,3 +715,4 @@ func HandlerWithOptions(si ServerInterface, options StdHTTPServerOptions) http.H
 
 	return m
 }
+
